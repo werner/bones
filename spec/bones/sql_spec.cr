@@ -40,19 +40,6 @@ describe Bones::SQL do
     name_column = NameColumn.new
     gender_column = GenderColumn.new
 
-    person.columns << id_column
-    person.columns << age_column
-    person.columns << name_column
-    person.columns << gender_column
-
-    worker.columns << id_column
-    worker.columns << person_id_column
-    worker.columns << name_column
-
-    position.columns << id_column
-    position.columns << person_id_column
-    position.columns << name_column
-
     sql = Bones::SQL.new
     sql.select(Bones::Select.new(person, [Bones::SelectColumn.new(id_column), Bones::SelectColumn.new(name_column)]))
       .select(Bones::Select.new(worker, [Bones::SelectColumn.new(name_column)]))
