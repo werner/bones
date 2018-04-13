@@ -44,8 +44,8 @@ describe Bones::SQL do
     sql.select(Bones::Select.new(person, [Bones::SelectColumn.new(id_column), Bones::SelectColumn.new(name_column)]))
       .select(Bones::Select.new(worker, [Bones::SelectColumn.new(name_column)]))
       .from(person)
-      .inner_join(Bones::Join.new(worker, id_column, person_id_column))
-      .inner_join(Bones::Join.new(position, id_column, person_id_column)).to_sql_string.should(
+      .inner_join(Bones::Join.new(table: worker, from_on: id_column, to_on: person_id_column))
+      .inner_join(Bones::Join.new(table: position, from_on: id_column, to_on: person_id_column)).to_sql_string.should(
     eq("SELECT person.id, person.name, worker.name FROM person INNER JOIN worker ON person.id = worker.person_id INNER JOIN position ON person.id = position.person_id")
     )
   end
@@ -56,7 +56,7 @@ describe Bones::SQL do
 
       id_column = IdColumn.new
       name_column = NameColumn.new
-      Bones::Join.new(worker, id_column, name_column)
+      Bones::Join.new(table: worker, from_on: id_column, to_on: name_column)
     end
   end
 end
