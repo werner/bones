@@ -1,2 +1,2 @@
 require "spec"
-require "../src/bones"
+require "../src/bones/**"
