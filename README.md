@@ -1,22 +1,27 @@
 # bones
 
-TODO: Write a description here
+A Type Safe SQL EDSL for Crystal, inspired in [Esqueleto](https://hackage.haskell.org/package/esqueleto)
+
 
 ## Installation
 
-TODO: Write installation instructions here
+Add this to your application's `shard.yml`:
+
+```yaml
+dependencies:
+  bones:
+    github: werner/bones
+```
 
 ## Usage
 
-TODO: Write usage instructions here
-
-## Development
-
-TODO: Write development instructions here
+```crystal
+require "bones"
+```
 
 ## Contributing
 
-1. Fork it ( https://github.com/[your-github-name]/bones/fork )
+1. Fork it ( https://github.com/werner/bones/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
@@ -24,4 +29,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [[your-github-name]](https://github.com/[your-github-name]) werner - creator, maintainer
+- [werner](https://github.com/werner) werner - creator, maintainer
