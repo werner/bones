@@ -11,9 +11,16 @@ module Bones
       {% end %}
     end
 
-    def to_sql_string
+    def to_sql_string : String
       {% for var in @type.instance_vars %}
-        {{var.stringify}}
+        return {{var.stringify}}
+      {% end %}
+      ""
+    end
+
+    def to_type
+      {% for var in @type.instance_vars %}
+        return {{var.type}}
       {% end %}
     end
   end

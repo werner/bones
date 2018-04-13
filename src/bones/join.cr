@@ -6,6 +6,7 @@ module Bones
     property to_on : Column
 
     def initialize(@table = TableDef.new, @from_on = Column.new, @to_on = Column.new)
+      raise Exceptions::ColumnNotEqualTypeException.new(@from_on.to_sql_string, @to_on.to_sql_string) if @from_on.to_type != @to_on.to_type
       @table_from = TableDef.new
     end
 

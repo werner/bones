@@ -30,7 +30,7 @@ class Position < Bones::TableDef
 end
 
 describe Bones::SQL do
-  it "query" do
+  it "shows a verified typed query" do
     person = Person.new
     worker = Worker.new
     position = Position.new
@@ -48,5 +48,15 @@ describe Bones::SQL do
       .inner_join(Bones::Join.new(position, id_column, person_id_column)).to_sql_string.should(
     eq("SELECT person.id, person.name, worker.name FROM person INNER JOIN worker ON person.id = worker.person_id INNER JOIN position ON person.id = position.person_id")
     )
+  end
+
+  it "throws a ColumnNotEqualTypeException exception" do
+    expect_raises(Bones::Exceptions::ColumnNotEqualTypeException) do
+      worker = Worker.new
+
+      id_column = IdColumn.new
+      name_column = NameColumn.new
+      Bones::Join.new(worker, id_column, name_column)
+    end
   end
 end
