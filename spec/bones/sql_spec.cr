@@ -54,7 +54,8 @@ describe Bones::SQL do
     position.columns << name_column
 
     sql = Bones::SQL.new
-    sql.from(person).inner_join(Bones::Join.new(worker, id_column, person_id_column)).inner_join(Bones::Join.new(position, id_column, person_id_column))
+    sql.from(person)
+      .inner_join(Bones::Join.new(worker, id_column, person_id_column))
+      .inner_join(Bones::Join.new(position, id_column, person_id_column))
   end
 end
-
