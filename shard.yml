@@ -1,0 +1,13 @@
+name: bones
+version: 0.1.0
+
+authors:
+  - werner <werner_a_e@yahoo.es>
+
+targets:
+  bones:
+    main: src/bones.cr
+
+crystal: 0.24.2
+
+license: MIT
