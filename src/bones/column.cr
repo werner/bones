@@ -1,23 +1,20 @@
 module Bones
   class Column
-    macro declare_type(name, value)
-      property {{property.var}} : {{property.type}} = value
+
+    macro column(name)
+      {% if name.type.stringify == "Int32" %}
+        property {{name.var}} : {{name.type}} = 0
+      {% elsif name.type.stringify == "String" %}
+        property {{name.var}} : {{name.type}} = ""
+      {% elsif name.type.stringify == "Char" %}
+        property {{name.var}} : {{name.type}} = '\''
+      {% end %}
     end
 
-    def self.column(name : Int32)
-      declare_fields(name, 0)
+    def to_sql_string
+      {% for var in @type.instance_vars %}
+        {{var.stringify}}
+      {% end %}
     end
-
-    def self.column(name : String)
-      declare_fields(name, "")
-    end
-
-    def self.column(name : Char)
-      declare_fields(name, '\'')
-    end
-
-    def self.column(name : Nil)
-    end
-
   end
 end
