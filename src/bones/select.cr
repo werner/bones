@@ -7,9 +7,7 @@ module Bones
     end
 
     def to_sql_string : String
-      @columns.map do |column| 
-        "#{@table.to_sql_string}.#{column.to_sql_string}"
-      end.join(", ")
+      @columns.map(&.to_sql_string).join(", ")
     end
   end
 end

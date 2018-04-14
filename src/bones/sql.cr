@@ -17,17 +17,17 @@ module Bones
       self
     end
 
-    def from(table : TableDef): SQL
+    def from(table : TableDef) : SQL
       @from_table = table
       self
     end
 
-    def inner_join(from_table = @from_table, to_table = TableDef.new, from_on = Column.new, to_on = Column.new): SQL
-      @inner_join_tables << Bones::Join.new(from_table, to_table, from_on, to_on)
+    def inner_join(from_table = @from_table, to_table = TableDef.new, on = Column.new) : SQL
+      @inner_join_tables << Bones::Join.new(from_table, to_table, on)
       self
     end
 
-    def where(from_table = @from_table, to_table = TableDef.new, column = Column.new)
+    def where(from_table = @from_table, to_table = TableDef.new, column = Column.new) : SQL
       @where << Bones::Where.new(from_table, to_table, column)
       self
     end

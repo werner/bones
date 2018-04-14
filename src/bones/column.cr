@@ -3,6 +3,10 @@ require "./operators/operator_methods"
 module Bones
   class Column
     include Operators::OperatorMethods
+    property table : TableDef
+
+    def initialize(@table = TableDef.new)
+    end
 
     macro column(name)
       {% if name.type.stringify == "Int32" %}
@@ -14,11 +18,11 @@ module Bones
       {% end %}
 
       def column_to_string : String
-        return {{name.var.stringify}}
+        return "#{@table.to_sql_string}.#{{{name.var.stringify}}}"
       end
 
       def column_with_op_to_string : String
-        return "#{{{name.var.stringify}}} #{@operator.to_sql_string}"
+        return "#{@table.to_sql_string}.#{{{name.var.stringify}}} #{@operator.to_sql_string}"
       end
 
       def column_to_type

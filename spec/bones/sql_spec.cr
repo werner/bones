@@ -34,19 +34,24 @@ describe Bones::SQL do
     person = Person.new
     worker = Worker.new
     position = Position.new
-    id_column = IdColumn.new
-    person_id_column = PersonIdColumn.new
-    age_column = AgeColumn.new
-    name_column = NameColumn.new
-    gender_column = GenderColumn.new
+
+    person_id_column = IdColumn.new(person)
+    worker_id_column = IdColumn.new(worker)
+    position_id_column = IdColumn.new(position)
+    worker_person_id_column = PersonIdColumn.new(worker)
+    position_person_id_column = PersonIdColumn.new(position)
+    person_age_column = AgeColumn.new(person)
+    person_name_column = NameColumn.new(person)
+    worker_name_column = NameColumn.new(worker)
+    person_gender_column = GenderColumn.new(person)
 
     sql = Bones::SQL.new
-    sql.select(Bones::Select.new(person, [Bones::SelectColumn.new(id_column), Bones::SelectColumn.new(name_column)]))
-      .select(Bones::Select.new(worker, [Bones::SelectColumn.new(name_column)]))
+    sql.select(Bones::Select.new(person, [Bones::SelectColumn.new(person_id_column), Bones::SelectColumn.new(person_name_column)]))
+      .select(Bones::Select.new(worker, [Bones::SelectColumn.new(worker_name_column)]))
       .from(person)
-      .inner_join(to_table: worker, from_on: id_column, to_on: person_id_column)
-      .inner_join(to_table: position, from_on: id_column, to_on: person_id_column)
-      .where(to_table: worker, column: name_column.eq("Jhon"))
+      .inner_join(to_table: worker, on: person_id_column.eq(worker_person_id_column))
+      .inner_join(to_table: position, on: person_id_column.dup.eq(position_person_id_column))
+      .where(to_table: worker, column: worker_name_column.eq("Jhon"))
       .to_sql_string
       .should(
     eq("SELECT person.id, person.name, worker.name " +

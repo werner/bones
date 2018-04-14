@@ -15,9 +15,14 @@ module Bones
         raise Exceptions::ColumnNotEqualValueTypeException.new(@left_column.to_sql_string, value) if @left_column.to_type != @value.class
       end
 
-     def to_sql_string : String
-       "= #{format_type(@value) || @right_column.to_sql_string}"
-     end
+      def to_sql_string : String
+        right_side = if @value.nil?
+                       @right_column.to_sql_string
+                     else
+                       format_type(@value)
+                     end
+        "= #{right_side}"
+      end
     end
   end
 end
