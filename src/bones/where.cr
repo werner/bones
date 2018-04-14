@@ -1,17 +1,13 @@
 module Bones
   class Where
-    property table : TableDef
-    property table_from : TableDef
-    property from_on : Column
-    property to_on : Column
+    property to_table : TableDef
+    property from_table : TableDef
+    property column : Column
 
-    def initialize(@table = TableDef.new, @from_on = Column.new, @to_on = Column.new)
-      raise Exceptions::ColumnNotEqualTypeException.new(@from_on.to_sql_string, @to_on.to_sql_string) if @from_on.to_type != @to_on.to_type
-      @table_from = TableDef.new
+    def initialize(@from_table = TableDef.new, @to_table = TableDef.new, @column = Column.new)
     end
 
     def to_sql_string : String
-      "WHERE #{@table_from.to_sql_string}.#{@from_on.to_sql_string} = #{@table.to_sql_string}.#{@to_on.to_sql_string}"
     end
   end
 end

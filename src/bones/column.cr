@@ -1,5 +1,8 @@
+require "./operators/operator"
+
 module Bones
   class Column
+    include Operators::OperatorMethods
 
     macro column(name)
       {% if name.type.stringify == "Int32" %}
@@ -9,19 +12,30 @@ module Bones
       {% elsif name.type.stringify == "Char" %}
         property {{name.var}} : {{name.type}} = '\''
       {% end %}
+
+      def column_to_string : String
+        return {{name.var.stringify}}
+      end
+
+      def column_to_type
+        return {{name.type}}
+      end
     end
 
     def to_sql_string : String
-      {% for var in @type.instance_vars %}
-        return {{var.stringify}}
-      {% end %}
-      ""
+      if self.responds_to?(:column_to_string)
+        self.column_to_string
+      else
+        ""
+      end
     end
 
     def to_type
-      {% for var in @type.instance_vars %}
-        return {{var.type}}
-      {% end %}
+      if self.responds_to?(:column_to_type)
+        self.column_to_type
+      else
+        nil
+      end
     end
   end
 end
