@@ -1,4 +1,4 @@
-require "./operators/operator"
+require "./operators/operator_methods"
 
 module Bones
   class Column
@@ -17,6 +17,10 @@ module Bones
         return {{name.var.stringify}}
       end
 
+      def column_with_op_to_string : String
+        return "#{{{name.var.stringify}}} #{@operator.to_sql_string}"
+      end
+
       def column_to_type
         return {{name.type}}
       end
@@ -25,6 +29,14 @@ module Bones
     def to_sql_string : String
       if self.responds_to?(:column_to_string)
         self.column_to_string
+      else
+        ""
+      end
+    end
+
+    def to_sql_with_op_string : String
+      if self.responds_to?(:column_with_op_to_string)
+        self.column_with_op_to_string
       else
         ""
       end

@@ -1,11 +1,21 @@
 module Bones
   module Operators
-    module OperatorMethods
-      property operator : Operator = Operator.new
+    class Operator
 
-      def eq(column : Column)
-        @operator = Eq.new(self, column)
-        self
+      def format_type(value : String | Char) : String
+        "'#{value.to_s}'"
+      end
+
+      def format_type(value : Int32 | Int64 | Float32 | Float64) : String
+        value.to_s
+      end
+
+      def format_type(value : Nil) : String
+        "NULL"
+      end
+
+      def to_sql_string : String
+        ""
       end
     end
   end

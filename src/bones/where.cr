@@ -8,6 +8,7 @@ module Bones
     end
 
     def to_sql_string : String
+      "WHERE #{@to_table.to_sql_string}.#{@column.to_sql_with_op_string}"
     end
   end
 end

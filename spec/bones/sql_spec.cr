@@ -46,10 +46,14 @@ describe Bones::SQL do
       .from(person)
       .inner_join(to_table: worker, from_on: id_column, to_on: person_id_column)
       .inner_join(to_table: position, from_on: id_column, to_on: person_id_column)
-      .where(to_table: worker, column: name_column.eq(name_column))
+      .where(to_table: worker, column: name_column.eq("Jhon"))
       .to_sql_string
       .should(
-    eq("SELECT person.id, person.name, worker.name FROM person INNER JOIN worker ON person.id = worker.person_id INNER JOIN position ON person.id = position.person_id")
+    eq("SELECT person.id, person.name, worker.name " +
+        "FROM person " +
+        "INNER JOIN worker ON person.id = worker.person_id " +
+        "INNER JOIN position ON person.id = position.person_id " + 
+        "WHERE worker.name = 'Jhon'")
     )
   end
 

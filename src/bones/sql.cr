@@ -37,6 +37,7 @@ module Bones
       sql_string = "SELECT #{@select_fields.map {|item| item.to_sql_string }.join(", ")}" unless @select_fields.empty?
       sql_string = "#{sql_string} FROM #{@from_table.to_sql_string}"
       sql_string = "#{sql_string} #{@inner_join_tables.map {|join_table| join_table.to_sql_string }.join(" ")}" unless @inner_join_tables.empty?
+      sql_string = "#{sql_string} #{@where.map {|where| where.to_sql_string }.join(" ")}" unless @where.empty?
       sql_string
     end
   end
