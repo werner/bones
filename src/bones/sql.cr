@@ -2,13 +2,13 @@ module Bones
   class SQL
     property select_fields : Array(Select)
     property from_table : TableDef
-    property inner_join_tables : Array(Join)
+    property inner_join_tables : Array(Joins::InnerJoin)
     property where : Array(Where)
 
     def initialize
       @select_fields = [] of Select
       @from_table = TableDef.new
-      @inner_join_tables = [] of Join
+      @inner_join_tables = [] of Joins::InnerJoin
       @where = [] of Where
     end
 
@@ -23,7 +23,7 @@ module Bones
     end
 
     def inner_join(from_table = @from_table, to_table = TableDef.new, on = Column.new) : SQL
-      @inner_join_tables << Join.new(from_table, to_table, on)
+      @inner_join_tables << Joins::InnerJoin.new(from_table, to_table, on)
       self
     end
 
