@@ -46,8 +46,8 @@ describe Bones::SQL do
     person_gender_column = GenderColumn.new(person)
 
     sql = Bones::SQL.new
-    sql.select(Bones::Select.new(person, [Bones::SelectColumn.new(person_id_column), Bones::SelectColumn.new(person_name_column)]))
-      .select(Bones::Select.new(worker, [Bones::SelectColumn.new(worker_name_column)]))
+    sql.select(table: person, columns: [person_id_column, person_name_column])
+      .select(table: worker, columns: [worker_name_column])
       .from(person)
       .inner_join(to_table: worker, on: person_id_column.eq(worker_person_id_column))
       .inner_join(to_table: position, on: person_id_column.dup.eq(position_person_id_column))

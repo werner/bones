@@ -12,8 +12,8 @@ module Bones
       @where = [] of Where
     end
 
-    def select(_select : Select) : SQL
-      @select_fields << _select
+    def select(table : TableDef, columns : Array(Column)) : SQL
+      @select_fields << Select.new(table, columns.map { |column| SelectColumn.new(column) })
       self
     end
 
@@ -23,12 +23,12 @@ module Bones
     end
 
     def inner_join(from_table = @from_table, to_table = TableDef.new, on = Column.new) : SQL
-      @inner_join_tables << Bones::Join.new(from_table, to_table, on)
+      @inner_join_tables << Join.new(from_table, to_table, on)
       self
     end
 
     def where(from_table = @from_table, to_table = TableDef.new, column = Column.new) : SQL
-      @where << Bones::Where.new(from_table, to_table, column)
+      @where << Where.new(from_table, to_table, column)
       self
     end
 
