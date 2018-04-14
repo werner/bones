@@ -70,4 +70,12 @@ describe Bones::SQL do
       id_column.eq(name_column)
     end
   end
+
+  it "throws a ColumnNotEqualValueTypeException exception" do
+    id_column = IdColumn.new
+
+    expect_raises(Bones::Exceptions::ColumnNotEqualValueTypeException) do
+      id_column.eq("hello")
+    end
+  end
 end
