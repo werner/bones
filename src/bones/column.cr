@@ -1,9 +1,11 @@
+require "./operators/operator"
 require "./operators/operator_methods"
 
 module Bones
   class Column
     include Operators::OperatorMethods
     property table : TableDef
+    property operator : Operators::Operator = Operators::Operator.new
 
     def initialize(@table = TableDef.new)
     end
