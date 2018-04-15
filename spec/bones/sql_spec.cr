@@ -70,10 +70,11 @@ describe Bones::SQL do
       .left_join(to_table: vehicle, on: person_id_column.dup.eq(vehicle_person_id_column))
       .right_join(to_table: department, on: person_id_column.dup.eq(department_person_id_column))
       .where(worker_name_column.eq("Jhon"))
-      .order_by(person_id_column.dup.asc)
       .and(person_gender_column.eq('M'))
       .or(person_age_column.gt(20))
       .and(person_id_column.dup.is_not(nil))
+      .order_by(person_id_column.dup.asc)
+      .group_by(person_id_column)
       .limit(100)
       .offset(2)
       .to_sql_string
@@ -86,6 +87,7 @@ describe Bones::SQL do
         "RIGHT JOIN department ON person.id = department.person_id " + 
         "WHERE worker.name = 'Jhon' AND person.gender = 'M' OR person.age > 20 " +
         "AND person.id IS NOT NULL " +
+        "GROUP BY person.id " +
         "ORDER BY person.id ASC " +
         "LIMIT 100 OFFSET 2")
     )
