@@ -8,7 +8,7 @@ module Bones
 
       property select_fields : Select = Select.new
       property from_table : TableDef = TableDef.new
-      property where : Array(Where) = [] of Where
+      property where : Where | Nil = nil
       property group_by : GroupBy = GroupBy.new
       property having : Having | Nil = nil
       property order_by : OrderBy = OrderBy.new
@@ -26,7 +26,7 @@ module Bones
       end
 
       def where(column = Column.new) : SQL
-        @where << Where.new(column)
+        @where = Where.new(column)
         self
       end
 
@@ -62,7 +62,8 @@ module Bones
         sql_string = "#{@select_fields.to_sql_string}" unless @select_fields.columns.empty?
         sql_string = "#{sql_string} FROM #{@from_table.to_sql_string}"
         sql_string = "#{sql_string} #{@join_tables.map {|join_table| join_table.to_sql_string }.join(" ")}" unless @join_tables.empty?
-        sql_string = "#{sql_string} #{@where.map {|where| where.to_sql_string }.join(" ")}" unless @where.empty?
+        where = @where
+        sql_string = "#{sql_string} #{where.to_sql_string}" unless where.nil?
         sql_string = "#{sql_string} #{@logical_operators.map {|logical_operators| logical_operators.to_sql_string }.join(" ")}" unless @logical_operators.empty?
         sql_string = "#{sql_string} #{@group_by.to_sql_string}" unless @group_by.columns.empty?
         having = @having
