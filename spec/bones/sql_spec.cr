@@ -72,6 +72,7 @@ describe Bones::SQL do
       .where(worker_name_column.eq("Jhon"))
       .and(person_gender_column.eq('M'))
       .or(person_age_column.gt(20))
+      .and(person_id_column.dup.is_not(nil))
       .to_sql_string
       .should(
     eq("SELECT person.id, person.name, worker.name " +
@@ -80,7 +81,8 @@ describe Bones::SQL do
         "INNER JOIN position ON person.id = position.person_id " +
         "LEFT JOIN vehicle ON person.id = vehicle.person_id " + 
         "RIGHT JOIN department ON person.id = department.person_id " + 
-        "WHERE worker.name = 'Jhon' AND person.gender = 'M' OR person.age > 20")
+        "WHERE worker.name = 'Jhon' AND person.gender = 'M' OR person.age > 20 " +
+        "AND person.id IS NOT NULL")
     )
   end
 

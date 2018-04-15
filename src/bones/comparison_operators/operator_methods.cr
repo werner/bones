@@ -21,6 +21,26 @@ module Bones
         self
       end
 
+      def is(column : Column)
+        @operator = Is.new(self, column)
+        self
+      end
+
+      def is(value : String | Char | Int32 | Int64 | Float32 | Float64 | Nil)
+        @operator = Is.new(self, value)
+        self
+      end
+
+      def is_not(column : Column)
+        @operator = IsNot.new(self, column)
+        self
+      end
+
+      def is_not(value : String | Char | Int32 | Int64 | Float32 | Float64 | Nil)
+        @operator = IsNot.new(self, value)
+        self
+      end
+
       def gt(column : Column)
         @operator = Gt.new(self, column)
         self

@@ -6,12 +6,7 @@ module Bones
       include Base
 
       def to_sql_string : String
-        right_side = if @value.nil?
-                       @right_column.to_sql_string
-                     else
-                       format_type(@value)
-                     end
-        "< #{right_side}"
+        "< #{validates_value}"
       end
     end
   end

@@ -2,11 +2,11 @@ require "./operator"
 
 module Bones
   module ComparisonOperators
-    class Eq < Operator
+    class Is < Operator
       include Base
 
       def to_sql_string : String
-        "= #{validates_value}"
+        "IS #{validates_value}"
       end
     end
   end
