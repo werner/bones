@@ -32,8 +32,8 @@ module Bones
       self
     end
 
-    def where(from_table = @from_table, to_table = TableDef.new, column = Column.new) : SQL
-      @where << Where.new(from_table, to_table, column)
+    def where(column = Column.new) : SQL
+      @where << Where.new(column)
       self
     end
 

@@ -57,7 +57,7 @@ describe Bones::SQL do
       .inner_join(to_table: worker, on: person_id_column.eq(worker_person_id_column))
       .inner_join(to_table: position, on: person_id_column.dup.eq(position_person_id_column))
       .left_join(to_table: vehicle, on: person_id_column.dup.eq(vehicle_person_id_column))
-      .where(to_table: worker, column: worker_name_column.eq("Jhon"))
+      .where(worker_name_column.eq("Jhon"))
       .to_sql_string
       .should(
     eq("SELECT person.id, person.name, worker.name " +
