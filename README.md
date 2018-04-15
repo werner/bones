@@ -1,6 +1,6 @@
 # bones
 
-A Type Safe SQL EDSL for Crystal, inspired in [Esqueleto](https://hackage.haskell.org/package/esqueleto)
+A SQL Query Builder for Crystal, inspired in [Esqueleto](https://hackage.haskell.org/package/esqueleto)
 
 
 ## Installation
