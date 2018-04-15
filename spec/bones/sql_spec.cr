@@ -20,6 +20,11 @@ class GenderColumn < Bones::Column
   column gender : Char
 end
 
+class SomeColumn < Bones::Column
+  column id : Int32
+  column name : String
+end
+
 class Person < Bones::TableDef
 end
 
@@ -79,7 +84,7 @@ describe Bones::SQL do
     )
   end
 
-  it "throws a ColumnNotEqualTypeException exception" do
+  it "raise a ColumnNotEqualTypeException exception" do
     id_column = IdColumn.new
     name_column = NameColumn.new
 
@@ -88,11 +93,19 @@ describe Bones::SQL do
     end
   end
 
-  it "throws a ColumnNotEqualValueTypeException exception" do
+  it "raise a ColumnNotEqualValueTypeException exception" do
     id_column = IdColumn.new
 
     expect_raises(Bones::Exceptions::ColumnNotEqualValueTypeException) do
       id_column.eq("hello")
+    end
+  end
+
+  it "raise a OneColumnPropertyException exception" do
+    id_column = IdColumn.new
+
+    expect_raises(Bones::Exceptions::OneColumnPropertyException) do
+      SomeColumn.new
     end
   end
 end

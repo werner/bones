@@ -1,17 +1,24 @@
 require "./comparison_operators/operator"
 require "./comparison_operators/operator_methods"
+require "./exceptions/one_column_property_exception"
 
 module Bones
   class Column
     include ComparisonOperators::OperatorMethods
 
+    @@columns_count = [] of Int32
+
     property table : TableDef
     property operator : ComparisonOperators::Operator = ComparisonOperators::Operator.new
 
     def initialize(@table = TableDef.new)
+      if @@columns_count.size > 1
+        raise Bones::Exceptions::OneColumnPropertyException.new
+      end
     end
 
     macro column(name)
+      @@columns_count << 1
       {% if name.type.stringify == "Int32" %}
         property {{name.var}} : {{name.type}} = 0
       {% elsif name.type.stringify == "String" %}
