@@ -32,6 +32,16 @@ module Bones
       self
     end
 
+    def right_join(from_table = @from_table, to_table = TableDef.new, on = Column.new) : SQL
+      @join_tables << Joins::RightJoin.new(from_table, to_table, on)
+      self
+    end
+
+    def outer_join(from_table = @from_table, to_table = TableDef.new, on = Column.new) : SQL
+      @join_tables << Joins::OuterJoin.new(from_table, to_table, on)
+      self
+    end
+
     def where(column = Column.new) : SQL
       @where << Where.new(column)
       self
