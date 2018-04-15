@@ -1,6 +1,7 @@
 module Bones
   module ComparisonOperators
     class Operator
+
       def format_type(value : String | Char) : String
         "'#{value.to_s}'"
       end

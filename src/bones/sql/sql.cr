@@ -10,6 +10,7 @@ module Bones
       property from_table : TableDef = TableDef.new
       property where : Array(Where) = [] of Where
       property group_by : GroupBy = GroupBy.new
+      property having : Having | Nil = nil
       property order_by : OrderBy = OrderBy.new
       property limit : Limit | Nil = nil
       property offset : Offset | Nil = nil
@@ -26,6 +27,11 @@ module Bones
 
       def where(column = Column.new) : SQL
         @where << Where.new(column)
+        self
+      end
+
+      def having(aggregate_function = AggregateFunction.new) : SQL
+        @having = Having.new(aggregate_function)
         self
       end
 
@@ -59,6 +65,8 @@ module Bones
         sql_string = "#{sql_string} #{@where.map {|where| where.to_sql_string }.join(" ")}" unless @where.empty?
         sql_string = "#{sql_string} #{@logical_operators.map {|logical_operators| logical_operators.to_sql_string }.join(" ")}" unless @logical_operators.empty?
         sql_string = "#{sql_string} #{@group_by.to_sql_string}" unless @group_by.columns.empty?
+        having = @having
+        sql_string = "#{sql_string} #{having.to_sql_string}" unless having.nil?
         sql_string = "#{sql_string} #{@order_by.to_sql_string}" unless @order_by.columns.empty?
         limit = @limit
         sql_string = "#{sql_string} #{limit.to_sql_string}" unless limit.nil?

@@ -63,6 +63,7 @@ describe Bones::SQL do
     person_gender_column = GenderColumn.new(person)
 
     sql = Bones::SQL::SQL.new
+    # I know this query does not make much sense, but I'm using it as a full example
     sql.select(person_id_column, person_name_column, worker_name_column, sql.sum(person_age_column))
       .from(person)
       .inner_join(to_table: worker, on: person_id_column.eq(worker_person_id_column))
@@ -75,6 +76,7 @@ describe Bones::SQL do
       .and(person_id_column.dup.is_not(nil))
       .order_by(person_id_column.dup.asc)
       .group_by(person_id_column, person_name_column, worker_name_column)
+      .having(sql.sum(person_age_column).lt(100))
       .limit(100)
       .offset(2)
       .to_sql_string
@@ -88,6 +90,7 @@ describe Bones::SQL do
         "WHERE worker.name = 'Jhon' AND person.gender = 'M' OR person.age > 20 " +
         "AND person.id IS NOT NULL " +
         "GROUP BY person.id, person.name, worker.name " +
+        "HAVING SUM(person.age) < 100 " +
         "ORDER BY person.id ASC " +
         "LIMIT 100 OFFSET 2")
     )
