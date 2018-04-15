@@ -8,6 +8,7 @@ module Bones
       property from_table : TableDef = TableDef.new
       property join_tables : Array(Joins::Join) = [] of Joins::Join
       property where : Array(Where) = [] of Where
+      property order_by : OrderBy = OrderBy.new
       property limit : Limit | Nil = nil
       property offset : Offset | Nil = nil
 
@@ -46,6 +47,11 @@ module Bones
         self
       end
 
+      def order_by(*columns) : SQL
+        @order_by = OrderBy.new(columns.map { |column| OrderByColumn.new(column) }.to_a)
+        self
+      end
+
       def limit(value : Int32) : SQL
         @limit = Limit.new(value)
         self
@@ -63,6 +69,7 @@ module Bones
         sql_string = "#{sql_string} #{@join_tables.map {|join_table| join_table.to_sql_string }.join(" ")}" unless @join_tables.empty?
         sql_string = "#{sql_string} #{@where.map {|where| where.to_sql_string }.join(" ")}" unless @where.empty?
         sql_string = "#{sql_string} #{@logical_operators.map {|logical_operators| logical_operators.to_sql_string }.join(" ")}" unless @logical_operators.empty?
+        sql_string = "#{sql_string} #{@order_by.to_sql_string}" unless @order_by.columns.empty?
         limit = @limit
         sql_string = "#{sql_string} #{limit.to_sql_string}" unless limit.nil?
         offset = @offset

@@ -1,15 +1,19 @@
 require "./comparison_operators/operator"
 require "./comparison_operators/operator_methods"
+require "./sorting_operators/operator"
+require "./sorting_operators/sorting_operator_methods"
 require "./exceptions/one_column_property_exception"
 
 module Bones
   class Column
     include ComparisonOperators::OperatorMethods
+    include SortingOperators::SortingOperatorMethods
 
     @@columns_count = [] of Int32
 
     property table : TableDef
     property operator : ComparisonOperators::Operator = ComparisonOperators::Operator.new
+    property sorting_operator : SortingOperators::Operator = SortingOperators::Operator.new
 
     def initialize(@table = TableDef.new)
       if @@columns_count.size > 1
@@ -35,6 +39,10 @@ module Bones
         return "#{@table.to_sql_string}.#{{{name.var.stringify}}} #{@operator.to_sql_string}"
       end
 
+      def column_with_sort_op_to_string : String
+        return "#{@table.to_sql_string}.#{{{name.var.stringify}}} #{@sorting_operator.to_sql_string}"
+      end
+
       def column_to_type
         return {{name.type}}
       end
@@ -51,6 +59,14 @@ module Bones
     def to_sql_with_op_string : String
       if self.responds_to?(:column_with_op_to_string)
         self.column_with_op_to_string
+      else
+        ""
+      end
+    end
+
+    def to_sql_with_sort_op_string : String
+      if self.responds_to?(:column_with_sort_op_to_string)
+        self.column_with_sort_op_to_string
       else
         ""
       end
