@@ -32,12 +32,16 @@ end
 class Vehicle < Bones::TableDef
 end
 
+class Department < Bones::TableDef
+end
+
 describe Bones::SQL do
   it "shows a verified typed query" do
     person = Person.new
     worker = Worker.new
     position = Position.new
     vehicle = Vehicle.new
+    department = Department.new
 
     person_id_column = IdColumn.new(person)
     worker_id_column = IdColumn.new(worker)
@@ -45,10 +49,12 @@ describe Bones::SQL do
     worker_person_id_column = PersonIdColumn.new(worker)
     position_person_id_column = PersonIdColumn.new(position)
     vehicle_person_id_column = PersonIdColumn.new(vehicle)
+    department_person_id_column = PersonIdColumn.new(department)
 
     person_age_column = AgeColumn.new(person)
     person_name_column = NameColumn.new(person)
     worker_name_column = NameColumn.new(worker)
+    department_name_column = NameColumn.new(department)
     person_gender_column = GenderColumn.new(person)
 
     sql = Bones::SQL.new
@@ -57,6 +63,7 @@ describe Bones::SQL do
       .inner_join(to_table: worker, on: person_id_column.eq(worker_person_id_column))
       .inner_join(to_table: position, on: person_id_column.dup.eq(position_person_id_column))
       .left_join(to_table: vehicle, on: person_id_column.dup.eq(vehicle_person_id_column))
+      .right_join(to_table: department, on: person_id_column.dup.eq(department_person_id_column))
       .where(worker_name_column.eq("Jhon"))
       .to_sql_string
       .should(
@@ -65,6 +72,7 @@ describe Bones::SQL do
         "INNER JOIN worker ON person.id = worker.person_id " +
         "INNER JOIN position ON person.id = position.person_id " + 
         "LEFT JOIN vehicle ON person.id = vehicle.person_id " + 
+        "RIGHT JOIN department ON person.id = department.person_id " + 
         "WHERE worker.name = 'Jhon'")
     )
   end
