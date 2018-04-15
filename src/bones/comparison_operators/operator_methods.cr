@@ -11,6 +11,16 @@ module Bones
         self
       end
 
+      def not_eq(column : Column)
+        @operator = NotEq.new(self, column)
+        self
+      end
+
+      def not_eq(value : String | Char | Int32 | Int64 | Float32 | Float64 | Nil)
+        @operator = NotEq.new(self, value)
+        self
+      end
+
       def gt(column : Column)
         @operator = Gt.new(self, column)
         self
