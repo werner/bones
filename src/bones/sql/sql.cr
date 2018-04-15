@@ -4,7 +4,7 @@ module Bones
 
       include LogicalOperators
 
-      property select_fields : Array(Select) = [] of Select
+      property select_fields : Select = Select.new
       property from_table : TableDef = TableDef.new
       property join_tables : Array(Joins::Join) = [] of Joins::Join
       property where : Array(Where) = [] of Where
@@ -14,7 +14,7 @@ module Bones
       property offset : Offset | Nil = nil
 
       def select(*columns) : SQL
-        @select_fields << Select.new(columns.map { |column| SelectColumn.new(column) }.to_a)
+        @select_fields = Select.new(columns.map { |column| SelectColumn.new(column) }.to_a)
         self
       end
 
@@ -70,7 +70,7 @@ module Bones
 
       def to_sql_string : String
         sql_string = ""
-        sql_string = "SELECT #{@select_fields.map {|item| item.to_sql_string }.join(", ")}" unless @select_fields.empty?
+        sql_string = "#{@select_fields.to_sql_string}" unless @select_fields.columns.empty?
         sql_string = "#{sql_string} FROM #{@from_table.to_sql_string}"
         sql_string = "#{sql_string} #{@join_tables.map {|join_table| join_table.to_sql_string }.join(" ")}" unless @join_tables.empty?
         sql_string = "#{sql_string} #{@where.map {|where| where.to_sql_string }.join(" ")}" unless @where.empty?
