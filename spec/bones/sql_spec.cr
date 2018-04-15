@@ -57,23 +57,23 @@ describe Bones::SQL do
     department_name_column = NameColumn.new(department)
     person_gender_column = GenderColumn.new(person)
 
-    sql = Bones::SQL.new
+    sql = Bones::SQL::SQL.new
     sql.select(person_id_column, person_name_column, worker_name_column)
       .from(person)
       .inner_join(to_table: worker, on: person_id_column.eq(worker_person_id_column))
       .inner_join(to_table: position, on: person_id_column.dup.eq(position_person_id_column))
       .left_join(to_table: vehicle, on: person_id_column.dup.eq(vehicle_person_id_column))
       .right_join(to_table: department, on: person_id_column.dup.eq(department_person_id_column))
-      .where(worker_name_column.eq("Jhon"))
+      .where(worker_name_column.eq("Jhon")).and(person_gender_column.eq('M'))
       .to_sql_string
       .should(
     eq("SELECT person.id, person.name, worker.name " +
         "FROM person " +
         "INNER JOIN worker ON person.id = worker.person_id " +
-        "INNER JOIN position ON person.id = position.person_id " + 
+        "INNER JOIN position ON person.id = position.person_id " +
         "LEFT JOIN vehicle ON person.id = vehicle.person_id " + 
         "RIGHT JOIN department ON person.id = department.person_id " + 
-        "WHERE worker.name = 'Jhon'")
+        "WHERE worker.name = 'Jhon' AND person.gender = 'M'")
     )
   end
 
