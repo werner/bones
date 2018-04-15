@@ -12,8 +12,8 @@ module Bones
       @where = [] of Where
     end
 
-    def select(table : TableDef, columns : Array(Column)) : SQL
-      @select_fields << Select.new(table, columns.map { |column| SelectColumn.new(column) })
+    def select(*columns) : SQL
+      @select_fields << Select.new(columns.map { |column| SelectColumn.new(column) }.to_a)
       self
     end
 
