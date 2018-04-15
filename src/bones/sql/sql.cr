@@ -3,6 +3,7 @@ module Bones
     class SQL
 
       include LogicalOperators
+      include AggregateFunctions
 
       property select_fields : Select = Select.new
       property from_table : TableDef = TableDef.new

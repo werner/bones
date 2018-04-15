@@ -63,7 +63,7 @@ describe Bones::SQL do
     person_gender_column = GenderColumn.new(person)
 
     sql = Bones::SQL::SQL.new
-    sql.select(person_id_column, person_name_column, worker_name_column)
+    sql.select(person_id_column, person_name_column, worker_name_column, sql.sum(person_age_column))
       .from(person)
       .inner_join(to_table: worker, on: person_id_column.eq(worker_person_id_column))
       .inner_join(to_table: position, on: person_id_column.dup.eq(position_person_id_column))
@@ -79,7 +79,7 @@ describe Bones::SQL do
       .offset(2)
       .to_sql_string
       .should(
-    eq("SELECT person.id, person.name, worker.name " +
+    eq("SELECT person.id, person.name, worker.name, SUM(person.age) " +
         "FROM person " +
         "INNER JOIN worker ON person.id = worker.person_id " +
         "INNER JOIN position ON person.id = position.person_id " +

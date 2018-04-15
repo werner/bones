@@ -1,6 +1,6 @@
  module Bones
    class SelectColumn
-     property column : Column
+     property column : Column | AggregateFunctions::AggregateFunction
  
      def initialize(@column = Column.new)
      end
