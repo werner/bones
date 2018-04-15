@@ -2,13 +2,13 @@ module Bones
   class SQL
     property select_fields : Array(Select)
     property from_table : TableDef
-    property inner_join_tables : Array(Joins::InnerJoin)
+    property join_tables : Array(Joins::Join)
     property where : Array(Where)
 
     def initialize
       @select_fields = [] of Select
       @from_table = TableDef.new
-      @inner_join_tables = [] of Joins::InnerJoin
+      @join_tables = [] of Joins::Join
       @where = [] of Where
     end
 
@@ -23,7 +23,12 @@ module Bones
     end
 
     def inner_join(from_table = @from_table, to_table = TableDef.new, on = Column.new) : SQL
-      @inner_join_tables << Joins::InnerJoin.new(from_table, to_table, on)
+      @join_tables << Joins::InnerJoin.new(from_table, to_table, on)
+      self
+    end
+
+    def left_join(from_table = @from_table, to_table = TableDef.new, on = Column.new) : SQL
+      @join_tables << Joins::LeftJoin.new(from_table, to_table, on)
       self
     end
 
@@ -36,7 +41,7 @@ module Bones
       sql_string = ""
       sql_string = "SELECT #{@select_fields.map {|item| item.to_sql_string }.join(", ")}" unless @select_fields.empty?
       sql_string = "#{sql_string} FROM #{@from_table.to_sql_string}"
-      sql_string = "#{sql_string} #{@inner_join_tables.map {|join_table| join_table.to_sql_string }.join(" ")}" unless @inner_join_tables.empty?
+      sql_string = "#{sql_string} #{@join_tables.map {|join_table| join_table.to_sql_string }.join(" ")}" unless @join_tables.empty?
       sql_string = "#{sql_string} #{@where.map {|where| where.to_sql_string }.join(" ")}" unless @where.empty?
       sql_string
     end
