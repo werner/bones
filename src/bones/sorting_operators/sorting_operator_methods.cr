@@ -1,12 +1,12 @@
 module Bones
   module SortingOperators
     module SortingOperatorMethods
-      def asc
+      def asc : Column
         @sorting_operator = Asc.new
         self
       end
 
-      def desc
+      def desc : Column
         @sorting_operator = Desc.new
         self
       end

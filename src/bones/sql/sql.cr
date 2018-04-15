@@ -64,7 +64,6 @@ module Bones
         sql_string = "#{sql_string} #{@join_tables.map {|join_table| join_table.to_sql_string }.join(" ")}" unless @join_tables.empty?
         where = @where
         sql_string = "#{sql_string} #{where.to_sql_string}" unless where.nil?
-        sql_string = "#{sql_string} #{@logical_operators.map {|logical_operators| logical_operators.to_sql_string }.join(" ")}" unless @logical_operators.empty?
         sql_string = "#{sql_string} #{@group_by.to_sql_string}" unless @group_by.columns.empty?
         having = @having
         sql_string = "#{sql_string} #{having.to_sql_string}" unless having.nil?
