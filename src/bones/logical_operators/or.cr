@@ -2,10 +2,11 @@ require "./logical_operator"
 
 module Bones
   module LogicalOperators
-    class And < LogicalOperator
+    class Or < LogicalOperator
       def to_sql_string : String
-        "AND #{@column.to_sql_with_op_string}"
+        "OR #{@column.to_sql_with_op_string}"
       end
     end
   end
 end
+

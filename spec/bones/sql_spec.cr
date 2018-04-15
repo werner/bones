@@ -64,7 +64,9 @@ describe Bones::SQL do
       .inner_join(to_table: position, on: person_id_column.dup.eq(position_person_id_column))
       .left_join(to_table: vehicle, on: person_id_column.dup.eq(vehicle_person_id_column))
       .right_join(to_table: department, on: person_id_column.dup.eq(department_person_id_column))
-      .where(worker_name_column.eq("Jhon")).and(person_gender_column.eq('M'))
+      .where(worker_name_column.eq("Jhon"))
+      .and(person_gender_column.eq('M'))
+      .or(person_age_column.gt(20))
       .to_sql_string
       .should(
     eq("SELECT person.id, person.name, worker.name " +
@@ -73,7 +75,7 @@ describe Bones::SQL do
         "INNER JOIN position ON person.id = position.person_id " +
         "LEFT JOIN vehicle ON person.id = vehicle.person_id " + 
         "RIGHT JOIN department ON person.id = department.person_id " + 
-        "WHERE worker.name = 'Jhon' AND person.gender = 'M'")
+        "WHERE worker.name = 'Jhon' AND person.gender = 'M' OR person.age > 20")
     )
   end
 

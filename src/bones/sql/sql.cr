@@ -50,7 +50,7 @@ module Bones
         sql_string = "#{sql_string} FROM #{@from_table.to_sql_string}"
         sql_string = "#{sql_string} #{@join_tables.map {|join_table| join_table.to_sql_string }.join(" ")}" unless @join_tables.empty?
         sql_string = "#{sql_string} #{@where.map {|where| where.to_sql_string }.join(" ")}" unless @where.empty?
-        sql_string = "#{sql_string} #{@and.map {|and| and.to_sql_string }.join(" ")}" unless @and.empty?
+        sql_string = "#{sql_string} #{@logical_operators.map {|logical_operators| logical_operators.to_sql_string }.join(" ")}" unless @logical_operators.empty?
         sql_string
       end
     end
