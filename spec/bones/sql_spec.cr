@@ -74,6 +74,7 @@ describe Bones::SQL do
       .or(person_age_column.gt(20))
       .and(person_id_column.dup.is_not(nil))
       .limit(100)
+      .offset(2)
       .to_sql_string
       .should(
     eq("SELECT person.id, person.name, worker.name " +
@@ -84,7 +85,7 @@ describe Bones::SQL do
         "RIGHT JOIN department ON person.id = department.person_id " + 
         "WHERE worker.name = 'Jhon' AND person.gender = 'M' OR person.age > 20 " +
         "AND person.id IS NOT NULL " +
-        "LIMIT 100")
+        "LIMIT 100 OFFSET 2")
     )
   end
 

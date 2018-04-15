@@ -9,6 +9,7 @@ module Bones
       property join_tables : Array(Joins::Join) = [] of Joins::Join
       property where : Array(Where) = [] of Where
       property limit : Limit | Nil = nil
+      property offset : Offset | Nil = nil
 
       def select(*columns) : SQL
         @select_fields << Select.new(columns.map { |column| SelectColumn.new(column) }.to_a)
@@ -50,6 +51,11 @@ module Bones
         self
       end
 
+      def offset(value : Int32) : SQL
+        @offset = Offset.new(value)
+        self
+      end
+
       def to_sql_string : String
         sql_string = ""
         sql_string = "SELECT #{@select_fields.map {|item| item.to_sql_string }.join(", ")}" unless @select_fields.empty?
@@ -59,6 +65,8 @@ module Bones
         sql_string = "#{sql_string} #{@logical_operators.map {|logical_operators| logical_operators.to_sql_string }.join(" ")}" unless @logical_operators.empty?
         limit = @limit
         sql_string = "#{sql_string} #{limit.to_sql_string}" unless limit.nil?
+        offset = @offset
+        sql_string = "#{sql_string} #{offset.to_sql_string}" unless offset.nil?
         sql_string
       end
     end
