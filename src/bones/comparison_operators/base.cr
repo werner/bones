@@ -1,5 +1,5 @@
 module Bones
-  module Operators
+  module ComparisonOperators
     module Base
       property left_column : Column = Column.new
       property right_column : Column = Column.new

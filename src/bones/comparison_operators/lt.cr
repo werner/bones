@@ -1,8 +1,8 @@
 require "./operator"
 
 module Bones
-  module Operators
-    class GtEq < Operator
+  module ComparisonOperators
+    class Lt < Operator
       include Base
 
       def to_sql_string : String
@@ -11,7 +11,7 @@ module Bones
                      else
                        format_type(@value)
                      end
-        ">= #{right_side}"
+        "< #{right_side}"
       end
     end
   end

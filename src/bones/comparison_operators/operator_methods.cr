@@ -1,5 +1,5 @@
 module Bones
-  module Operators
+  module ComparisonOperators
     module OperatorMethods
       def eq(column : Column)
         @operator = Eq.new(self, column)

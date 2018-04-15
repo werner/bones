@@ -1,11 +1,12 @@
-require "./operators/operator"
-require "./operators/operator_methods"
+require "./comparison_operators/operator"
+require "./comparison_operators/operator_methods"
 
 module Bones
   class Column
-    include Operators::OperatorMethods
+    include ComparisonOperators::OperatorMethods
+
     property table : TableDef
-    property operator : Operators::Operator = Operators::Operator.new
+    property operator : ComparisonOperators::Operator = ComparisonOperators::Operator.new
 
     def initialize(@table = TableDef.new)
     end
