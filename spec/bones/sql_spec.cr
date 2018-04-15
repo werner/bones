@@ -74,7 +74,7 @@ describe Bones::SQL do
       .or(person_age_column.gt(20))
       .and(person_id_column.dup.is_not(nil))
       .order_by(person_id_column.dup.asc)
-      .group_by(person_id_column)
+      .group_by(person_id_column, person_name_column, worker_name_column)
       .limit(100)
       .offset(2)
       .to_sql_string
@@ -87,7 +87,7 @@ describe Bones::SQL do
         "RIGHT JOIN department ON person.id = department.person_id " + 
         "WHERE worker.name = 'Jhon' AND person.gender = 'M' OR person.age > 20 " +
         "AND person.id IS NOT NULL " +
-        "GROUP BY person.id " +
+        "GROUP BY person.id, person.name, worker.name " +
         "ORDER BY person.id ASC " +
         "LIMIT 100 OFFSET 2")
     )
@@ -115,6 +115,20 @@ describe Bones::SQL do
 
     expect_raises(Bones::Exceptions::OneColumnPropertyException) do
       SomeColumn.new
+    end
+  end
+
+  it "raise a GroupByMissingColumnException exception" do
+    expect_raises(Bones::Exceptions::GroupByMissingColumnException) do
+      person = Person.new
+
+      person_id_column = IdColumn.new(person)
+      person_name_column = NameColumn.new(person)
+
+      sql = Bones::SQL::SQL.new
+      sql.select(person_id_column, person_name_column)
+         .from(person)
+         .group_by(person_id_column)
     end
   end
 end

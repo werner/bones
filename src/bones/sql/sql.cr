@@ -30,7 +30,9 @@ module Bones
       end
 
       def group_by(*columns) : SQL
-        @group_by = GroupBy.new(columns.map { |column| GroupByColumn.new(column) }.to_a)
+        group_by_columns = columns.map { |column| GroupByColumn.new(column) }.to_a
+        check_group_by_columns(group_by_columns)
+        @group_by = GroupBy.new(group_by_columns)
         self
       end
 
@@ -63,6 +65,16 @@ module Bones
         offset = @offset
         sql_string = "#{sql_string} #{offset.to_sql_string}" unless offset.nil?
         sql_string
+      end
+
+      private def check_group_by_columns(group_by_columns : Array(GroupByColumn))
+        group_by_columns_columns = group_by_columns.map(&.column)
+        select_columns = @select_fields.columns.reject { |column| column.column.is_a?(AggregateFunction) }.map(&.column)
+        select_columns.each do |column|
+          if column.is_a?(Column)
+            raise Exceptions::GroupByMissingColumnException.new(column) unless group_by_columns.map(&.column).find{ |group_column| group_column.class == column.class }
+          end
+        end
       end
     end
   end
