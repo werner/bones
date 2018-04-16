@@ -93,6 +93,20 @@ describe Bones::SQL do
     )
   end
 
+  it "uses the count star" do
+    person = Person.new
+    sql = Bones::SQL::SQL.new
+
+    sql.select(sql.count_all).from(person).to_sql_string.should eq("SELECT COUNT(*) FROM person")
+  end
+
+  it "uses the count star with table" do
+    person = Person.new
+    sql = Bones::SQL::SQL.new
+
+    sql.select(sql.count_all(person)).from(person).to_sql_string.should eq("SELECT COUNT(person.*) FROM person")
+  end
+
   it "raise a ColumnNotEqualTypeException exception" do
     id_column = IdColumn.new
     name_column = NameColumn.new

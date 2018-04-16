@@ -9,11 +9,11 @@ module Bones
       include ComparisonOperators::OperatorMethods
       include LogicalOperators::LogicalOperatorMethods
 
-      property column : Column
+      property column : Column = Column.new
       property operator : ComparisonOperators::Operator = ComparisonOperators::Operator.new
       property logical_operators : Array(LogicalOperators::LogicalOperator) = [] of LogicalOperators::LogicalOperator
 
-      def initialize(@column : Column = Column.new)
+      def initialize(@column : Column)
       end
 
       def to_sql_string : String
