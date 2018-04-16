@@ -15,26 +15,67 @@ module Bones
       property limit : Limit | Nil = nil
       property offset : Offset | Nil = nil
 
+      # Starts the query builder, it's the select clause with a series of columns arguments.
+      #
+      # ```
+      # class MyColumn < Bones::Column
+      #   column name : String
+      # end
+      #
+      # class MyAnotherColumn < Bones::Column
+      #   column name : Int32
+      # end
+      #
+      # class MyTable < Bones::TableDef
+      # end
+      #
+      # my_table = MyTable.new
+      # my_column = MyColumn.new(my_table)
+      #
+      # sql = Bones::SQL::SQL.new
+      # sql.select(my_column, sql.sum(my_another_column))
+      # ``` 
       def select(*columns) : SQL
         @select_fields = Select.new(columns.map { |column| SelectColumn.new(column) }.to_a)
         self
       end
 
+      # From SQL clause, with a TableDef argument.
+      #
+      # ```
+      # sql.select(my_column, sql.sum(my_another_column)).from(my_table)
+      # ```
       def from(table : TableDef) : SQL
         @from_table = table
         self
       end
 
+      # Where SQL clause, allow only one column argument, the rest can be concatenated.
+      #
+      # ```
+      # sql.select(my_column).from(my_table).where(my_column.eq("Peter").and(my_another_column.gt(10)))
+      # ```
       def where(column = Column.new) : SQL
         @where = Where.new(column)
         self
       end
 
+      # Having SQL clause, allow only one aggregate function argument, the rest can be concatenated.
+      #
+      # ```
+      # sql.select(my_column).from(my_table).having(sql.count(my_column).gt(1).and(sql.avg(my_another_column).gt(10)))
+      # ```
       def having(aggregate_function = AggregateFunction.new) : SQL
         @having = Having.new(aggregate_function)
         self
       end
 
+      # Group By SQL clause, you can add a series of columns.
+      # It checks all columns in select clause are added here or in an aggregate function.
+      #
+      # ```
+      # sql.select(my_column).from(my_table).group_by(my_column)
+      # ```
       def group_by(*columns) : SQL
         group_by_columns = columns.map { |column| GroupByColumn.new(column) }.to_a
         check_group_by_columns(group_by_columns)
@@ -42,21 +83,42 @@ module Bones
         self
       end
 
+      # Order By SQL clause, you can add a series of columns.
+      #
+      # ```
+      # sql.select(my_column).from(my_table).order_by(my_column.asc)
+      # ```
       def order_by(*columns) : SQL
         @order_by = OrderBy.new(columns.map { |column| OrderByColumn.new(column) }.to_a)
         self
       end
 
+      # Limit SQL clause, accept only Int32 values.
+      #
+      # ```
+      # sql.select(my_column).from(my_table).limit(100)
+      # ```
       def limit(value : Int32) : SQL
         @limit = Limit.new(value)
         self
       end
 
+      # Offset SQL clause, accept only Int32 values.
+      #
+      # ```
+      # sql.select(my_column).from(my_table).limit(100).offset(1)
+      # ```
       def offset(value : Int32) : SQL
         @offset = Offset.new(value)
         self
       end
 
+      # Returns the SQL query in a String.
+      #
+      # ```
+      # sql.select(my_column).from(my_table).where(my_column.eq("Peter").and(my_another_column.gt(10))).to_sql_string
+      # # => SELECT my_table.my_column FROM my_table WHERE my_table.my_column = 'Peter' AND my_table.my_another_column > 10
+      # ```
       def to_sql_string : String
         sql_string = ""
         sql_string = "#{@select_fields.to_sql_string}" unless @select_fields.columns.empty?
