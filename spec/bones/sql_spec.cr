@@ -25,28 +25,13 @@ class SomeColumn < Bones::Column
   column name : String
 end
 
-class Person < Bones::TableDef
-end
-
-class Worker < Bones::TableDef
-end
-
-class Position < Bones::TableDef
-end
-
-class Vehicle < Bones::TableDef
-end
-
-class Department < Bones::TableDef
-end
-
 describe Bones::SQL do
   it "shows a verified typed query" do
-    person = Person.new
-    worker = Worker.new
-    position = Position.new
-    vehicle = Vehicle.new
-    department = Department.new
+    person = Bones::TableDef.new("person")
+    worker = Bones::TableDef.new("worker")
+    position = Bones::TableDef.new("position")
+    vehicle = Bones::TableDef.new("vehicle")
+    department = Bones::TableDef.new("department")
 
     person_id_column = IdColumn.new(person)
     worker_id_column = IdColumn.new(worker)
@@ -94,14 +79,14 @@ describe Bones::SQL do
   end
 
   it "uses the count star" do
-    person = Person.new
+    person = Bones::TableDef.new("person")
     sql = Bones::SQL::SQL.new
 
     sql.select(sql.count_all).from(person).to_sql_string.should eq("SELECT COUNT(*) FROM person")
   end
 
   it "uses the count star with table" do
-    person = Person.new
+    person = Bones::TableDef.new("person")
     sql = Bones::SQL::SQL.new
 
     sql.select(sql.count_all(person)).from(person).to_sql_string.should eq("SELECT COUNT(person.*) FROM person")
@@ -134,7 +119,7 @@ describe Bones::SQL do
 
   it "raise a GroupByMissingColumnException exception" do
     expect_raises(Bones::Exceptions::GroupByMissingColumnException) do
-      person = Person.new
+      person = Bones::TableDef.new("person")
 
       person_id_column = IdColumn.new(person)
       person_name_column = NameColumn.new(person)

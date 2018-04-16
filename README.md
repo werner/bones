@@ -38,26 +38,11 @@ class GenderColumn < Bones::Column
   column gender : Char
 end
 
-class Person < Bones::TableDef
-end
-
-class Worker < Bones::TableDef
-end
-
-class Position < Bones::TableDef
-end
-
-class Vehicle < Bones::TableDef
-end
-
-class Department < Bones::TableDef
-end
-
-person = Person.new
-worker = Worker.new
-position = Position.new
-vehicle = Vehicle.new
-department = Department.new
+person = Bones::TableDef.new("person")
+worker = Bones::TableDef.new("worker")
+position = Bones::TableDef.new("position")
+vehicle = Bones::TableDef.new("vehicle")
+department = Bones::TableDef.new("department")
 
 person_id_column = IdColumn.new(person)
 worker_id_column = IdColumn.new(worker)
