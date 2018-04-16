@@ -1,4 +1,4 @@
-# bones
+# bones [![Build Status](https://travis-ci.org/werner/bones.png)](https://travis-ci.org/werner/bones)
 
 A SQL Query Builder for Crystal.
 
