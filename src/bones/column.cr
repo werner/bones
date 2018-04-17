@@ -4,7 +4,6 @@ require "./sorting_operators/operator"
 require "./sorting_operators/sorting_operator_methods"
 require "./logical_operators/operator"
 require "./logical_operators/logical_operator_methods"
-require "./exceptions/one_column_property_exception"
 
 module Bones
   class Column
