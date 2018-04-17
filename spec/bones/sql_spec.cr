@@ -3,7 +3,6 @@ require "../spec_helper"
 class Person < Bones::TableDef
   table_name person
   column id : Int32
-  column person_id : Int32
   column age : Int32
   column name : String
   column gender : Char
