@@ -13,12 +13,12 @@ module Bones
 
     property name : String
     property table : String
-    property default_value : Int32 | String | Char | Nil
+    property value : Int32 | String | Char | Nil
     property operator : ComparisonOperators::Operator = ComparisonOperators::Operator.new
     property sorting_operator : SortingOperators::Operator = SortingOperators::Operator.new
     property logical_operators : Array(LogicalOperators::LogicalOperator) = [] of LogicalOperators::LogicalOperator
 
-    def initialize(@table = "", @name = "", @default_value = nil)
+    def initialize(@table = "", @name = "", @value = nil)
     end
 
     def to_sql_string : String
@@ -40,7 +40,7 @@ module Bones
     end
 
     def to_type
-      @default_value.class
+      @value.class
     end
   end
 end
