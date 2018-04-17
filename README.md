@@ -24,6 +24,11 @@ class Person < Bones::TableDef
   column age : Int32
   column name : String
   column gender : Char
+
+  has_many :worker
+  has_many :position
+  has_many :vehicle
+  has_many :department
 end
 
 class Worker < Bones::TableDef
@@ -31,6 +36,8 @@ class Worker < Bones::TableDef
   column id : Int32
   column person_id : Int32
   column name : String
+
+  belongs_to :person
 end
 
 class Position < Bones::TableDef
@@ -38,6 +45,8 @@ class Position < Bones::TableDef
   column id : Int32
   column person_id : Int32
   column name : String
+
+  belongs_to :person
 end
 
 class Vehicle < Bones::TableDef
@@ -45,6 +54,8 @@ class Vehicle < Bones::TableDef
   column id : Int32
   column person_id : Int32
   column name : String
+
+  belongs_to :person
 end
 
 class Department < Bones::TableDef
@@ -52,6 +63,8 @@ class Department < Bones::TableDef
   column id : Int32
   column person_id : Int32
   column name : String
+
+  belongs_to :person
 end
 
 person = Person.new

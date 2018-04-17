@@ -17,6 +17,14 @@ module Bones
       {% end %}
     end
 
+    macro has_many(name)
+      property {{name.id}} : Array({{name.id.camelcase}}) = [] of {{name.id.camelcase}}
+    end
+
+    macro belongs_to(name)
+      property {{name.id}} : {{name.id.camelcase}} | Nil = nil
+    end
+
     def to_sql_string : String
       @@name.downcase
     end
