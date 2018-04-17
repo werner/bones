@@ -10,16 +10,13 @@ module Bones
     macro column(name)
       {% if name.type.stringify == "Int32" %}
         default_value = 0
-        property {{name.var}} : {{name.type}} = 0
-        property column_{{name.var}} : Bones::Column = Bones::Column.new(@@name, {{name.var.stringify}}, 0)
+        property {{name.var}} : Bones::Column = Bones::Column.new(@@name, {{name.var.stringify}}, 0)
       {% elsif name.type.stringify == "String" %}
         default_value = ""
-        property {{name.var}} : {{name.type}} = ""
-        property column_{{name.var}} : Bones::Column = Bones::Column.new(@@name, {{name.var.stringify}}, "")
+        property {{name.var}} : Bones::Column = Bones::Column.new(@@name, {{name.var.stringify}}, "")
       {% elsif name.type.stringify == "Char" %}
         default_value = '\''
-        property {{name.var}} : {{name.type}} = '\''
-        property column_{{name.var}} : Bones::Column = Bones::Column.new(@@name, {{name.var.stringify}}, '\'')
+        property {{name.var}} : Bones::Column = Bones::Column.new(@@name, {{name.var.stringify}}, '\'')
       {% end %}
     end
 

@@ -142,7 +142,9 @@ module Bones
         select_columns = @select_fields.columns.reject { |column| column.column.is_a?(AggregateFunction) }.map(&.column)
         select_columns.each do |column|
           if column.is_a?(Column)
-            raise Exceptions::GroupByMissingColumnException.new(column) unless group_by_columns.map(&.column).find{ |group_column| group_column.class == column.class }
+            unless group_by_columns.map(&.column).find{ |group_column| group_column.name == column.name }
+              raise Exceptions::GroupByMissingColumnException.new(column) 
+            end
           end
         end
       end

@@ -1,25 +1,7 @@
 require "../spec_helper"
 
-class IdColumn < Bones::Column
-end
-
-class PersonIdColumn < Bones::Column
-end
-
-class AgeColumn < Bones::Column
-end
-
-class NameColumn < Bones::Column
-end
-
-class GenderColumn < Bones::Column
-end
-
-class SomeColumn < Bones::Column
-end
-
 class Person < Bones::TableDef
-  table_name people
+  table_name person
   column id : Int32
   column person_id : Int32
   column age : Int32
@@ -28,28 +10,28 @@ class Person < Bones::TableDef
 end
 
 class Worker < Bones::TableDef
-  table_name workers
+  table_name worker
   column id : Int32
   column person_id : Int32
   column name : String
 end
 
 class Position < Bones::TableDef
-  table_name positions
+  table_name position
   column id : Int32
   column person_id : Int32
   column name : String
 end
 
 class Vehicle < Bones::TableDef
-  table_name cars
+  table_name vehicle
   column id : Int32
   column person_id : Int32
   column name : String
 end
 
 class Department < Bones::TableDef
-  table_name cars
+  table_name department
   column id : Int32
   column person_id : Int32
   column name : String
@@ -63,32 +45,32 @@ describe Bones::SQL do
     vehicle = Vehicle.new
     department = Department.new
 
-    person_id_column = person.column_id
-    worker_id_column = worker.column_id
-    position_id_column = position.column_id
-    worker_person_id_column = worker.column_person_id
-    position_person_id_column = position.column_person_id 
-    vehicle_person_id_column = vehicle.column_person_id
-    department_person_id_column = department.column_person_id
+    person_id = person.id
+    worker_id = worker.id
+    position_id = position.id
+    worker_person_id = worker.person_id
+    position_person_id = position.person_id 
+    vehicle_person_id = vehicle.person_id
+    department_person_id = department.person_id
 
-    person_age_column = person.column_age
-    person_name_column = person.column_name
-    worker_name_column = worker.column_name
-    department_name_column = department.column_name
-    person_gender_column = person.column_gender
+    person_age = person.age
+    person_name = person.name
+    worker_name = worker.name
+    department_name = department.name
+    person_gender = person.gender
 
     sql = Bones::SQL::SQL.new
     # I know this query does not make much sense, but I'm using it as a full example
-    sql.select(person_id_column, person_name_column, worker_name_column, sql.sum(person_age_column))
+    sql.select(person_id, person_name, worker_name, sql.sum(person_age))
       .from(person)
-      .inner_join(to_table: worker, on: person_id_column.eq(worker_person_id_column))
-      .inner_join(to_table: position, on: person_id_column.dup.eq(position_person_id_column))
-      .left_join(to_table: vehicle, on: person_id_column.dup.eq(vehicle_person_id_column))
-      .right_join(to_table: department, on: person_id_column.dup.eq(department_person_id_column))
-      .where(worker_name_column.eq("Jhon").and(person_gender_column.eq('M')).or(person_age_column.gt(20)).and(person_id_column.dup.is_not(nil)))
-      .order_by(person_id_column.dup.asc)
-      .group_by(person_id_column, person_name_column, worker_name_column)
-      .having(sql.sum(person_age_column).lt(100).and(sql.count(person_id_column).gt(1)))
+      .inner_join(to_table: worker, on: person_id.dup.eq(worker_person_id))
+      .inner_join(to_table: position, on: person_id.dup.eq(position_person_id))
+      .left_join(to_table: vehicle, on: person_id.dup.eq(vehicle_person_id))
+      .right_join(to_table: department, on: person_id.dup.eq(department_person_id))
+      .where(worker_name.eq("Jhon").and(person_gender.eq('M')).or(person_age.gt(20)).and(person_id.is_not(nil)))
+      .order_by(person_id.asc)
+      .group_by(person_id, person_name, worker_name)
+      .having(sql.sum(person_age).lt(100).and(sql.count(person_id).gt(1)))
       .limit(100)
       .offset(2)
       .to_sql_string
@@ -124,20 +106,20 @@ describe Bones::SQL do
 
   it "raise a ColumnNotEqualTypeException exception" do
     person = Person.new
-    person_id_column = person.column_id
-    person_name_column = person.column_name
+    person_id = person.id
+    person_name = person.name
 
     expect_raises(Bones::Exceptions::ColumnNotEqualTypeException) do
-      person_id_column.eq(person_name_column)
+      person_id.eq(person_name)
     end
   end
 
   it "raise a ColumnNotEqualValueTypeException exception" do
     person = Person.new
-    person_id_column = person.column_id
+    person_id = person.id
 
     expect_raises(Bones::Exceptions::ColumnNotEqualValueTypeException) do
-      person_id_column.eq("hello")
+      person_id.eq("hello")
     end
   end
 
@@ -145,13 +127,13 @@ describe Bones::SQL do
     expect_raises(Bones::Exceptions::GroupByMissingColumnException) do
       person = Person.new
 
-      person_id_column = person.column_id
-      person_name_column = person.column_name
+      person_id = person.id
+      person_name = person.name
 
       sql = Bones::SQL::SQL.new
-      sql.select(person_id_column, person_name_column)
+      sql.select(person_id, person_name)
          .from(person)
-         .group_by(person_id_column)
+         .group_by(person_id)
     end
   end
 end
