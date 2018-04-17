@@ -1,51 +1,81 @@
 require "../spec_helper"
 
 class IdColumn < Bones::Column
-  column id : Int32
 end
 
 class PersonIdColumn < Bones::Column
-  column person_id : Int32
 end
 
 class AgeColumn < Bones::Column
-  column age : Int32
 end
 
 class NameColumn < Bones::Column
-  column name : String
 end
 
 class GenderColumn < Bones::Column
-  column gender : Char
 end
 
 class SomeColumn < Bones::Column
+end
+
+class Person < Bones::TableDef
+  table_name people
   column id : Int32
+  column person_id : Int32
+  column age : Int32
+  column name : String
+  column gender : Char
+end
+
+class Worker < Bones::TableDef
+  table_name workers
+  column id : Int32
+  column person_id : Int32
+  column name : String
+end
+
+class Position < Bones::TableDef
+  table_name positions
+  column id : Int32
+  column person_id : Int32
+  column name : String
+end
+
+class Vehicle < Bones::TableDef
+  table_name cars
+  column id : Int32
+  column person_id : Int32
+  column name : String
+end
+
+class Department < Bones::TableDef
+  table_name cars
+  column id : Int32
+  column person_id : Int32
   column name : String
 end
 
 describe Bones::SQL do
   it "shows a verified typed query" do
-    person = Bones::TableDef.new("person")
-    worker = Bones::TableDef.new("worker")
-    position = Bones::TableDef.new("position")
-    vehicle = Bones::TableDef.new("vehicle")
-    department = Bones::TableDef.new("department")
+    person = Person.new
+    worker = Worker.new
+    position = Position.new
+    vehicle = Vehicle.new
+    department = Department.new
 
-    person_id_column = IdColumn.new(person)
-    worker_id_column = IdColumn.new(worker)
-    position_id_column = IdColumn.new(position)
-    worker_person_id_column = PersonIdColumn.new(worker)
-    position_person_id_column = PersonIdColumn.new(position)
-    vehicle_person_id_column = PersonIdColumn.new(vehicle)
-    department_person_id_column = PersonIdColumn.new(department)
+    person_id_column = person.column_id
+    worker_id_column = worker.column_id
+    position_id_column = position.column_id
+    worker_person_id_column = worker.column_person_id
+    position_person_id_column = position.column_person_id 
+    vehicle_person_id_column = vehicle.column_person_id
+    department_person_id_column = department.column_person_id
 
-    person_age_column = AgeColumn.new(person)
-    person_name_column = NameColumn.new(person)
-    worker_name_column = NameColumn.new(worker)
-    department_name_column = NameColumn.new(department)
-    person_gender_column = GenderColumn.new(person)
+    person_age_column = person.column_age
+    person_name_column = person.column_name
+    worker_name_column = worker.column_name
+    department_name_column = department.column_name
+    person_gender_column = person.column_gender
 
     sql = Bones::SQL::SQL.new
     # I know this query does not make much sense, but I'm using it as a full example
@@ -79,50 +109,44 @@ describe Bones::SQL do
   end
 
   it "uses the count star" do
-    person = Bones::TableDef.new("person")
+    person = Person.new
     sql = Bones::SQL::SQL.new
 
     sql.select(sql.count_all).from(person).to_sql_string.should eq("SELECT COUNT(*) FROM person")
   end
 
   it "uses the count star with table" do
-    person = Bones::TableDef.new("person")
+    person = Person.new
     sql = Bones::SQL::SQL.new
 
     sql.select(sql.count_all(person)).from(person).to_sql_string.should eq("SELECT COUNT(person.*) FROM person")
   end
 
   it "raise a ColumnNotEqualTypeException exception" do
-    id_column = IdColumn.new
-    name_column = NameColumn.new
+    person = Person.new
+    person_id_column = person.column_id
+    person_name_column = person.column_name
 
     expect_raises(Bones::Exceptions::ColumnNotEqualTypeException) do
-      id_column.eq(name_column)
+      person_id_column.eq(person_name_column)
     end
   end
 
   it "raise a ColumnNotEqualValueTypeException exception" do
-    id_column = IdColumn.new
+    person = Person.new
+    person_id_column = person.column_id
 
     expect_raises(Bones::Exceptions::ColumnNotEqualValueTypeException) do
-      id_column.eq("hello")
-    end
-  end
-
-  it "raise a OneColumnPropertyException exception" do
-    id_column = IdColumn.new
-
-    expect_raises(Bones::Exceptions::OneColumnPropertyException) do
-      SomeColumn.new
+      person_id_column.eq("hello")
     end
   end
 
   it "raise a GroupByMissingColumnException exception" do
     expect_raises(Bones::Exceptions::GroupByMissingColumnException) do
-      person = Bones::TableDef.new("person")
+      person = Person.new
 
-      person_id_column = IdColumn.new(person)
-      person_name_column = NameColumn.new(person)
+      person_id_column = person.column_id
+      person_name_column = person.column_name
 
       sql = Bones::SQL::SQL.new
       sql.select(person_id_column, person_name_column)
