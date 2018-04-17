@@ -18,74 +18,89 @@ dependencies:
 ```crystal
 require "bones"
 
-class IdColumn < Bones::Column
+class Person < Bones::TableDef
+  table_name person
   column id : Int32
-end
-
-class PersonIdColumn < Bones::Column
   column person_id : Int32
-end
-
-class AgeColumn < Bones::Column
   column age : Int32
-end
-
-class NameColumn < Bones::Column
   column name : String
-end
-
-class GenderColumn < Bones::Column
   column gender : Char
 end
 
-person = Bones::TableDef.new("person")
-worker = Bones::TableDef.new("worker")
-position = Bones::TableDef.new("position")
-vehicle = Bones::TableDef.new("vehicle")
-department = Bones::TableDef.new("department")
+class Worker < Bones::TableDef
+  table_name worker
+  column id : Int32
+  column person_id : Int32
+  column name : String
+end
 
-person_id_column = IdColumn.new(person)
-worker_id_column = IdColumn.new(worker)
-position_id_column = IdColumn.new(position)
-worker_person_id_column = PersonIdColumn.new(worker)
-position_person_id_column = PersonIdColumn.new(position)
-vehicle_person_id_column = PersonIdColumn.new(vehicle)
-department_person_id_column = PersonIdColumn.new(department)
+class Position < Bones::TableDef
+  table_name position
+  column id : Int32
+  column person_id : Int32
+  column name : String
+end
 
-person_age_column = AgeColumn.new(person)
-person_name_column = NameColumn.new(person)
-worker_name_column = NameColumn.new(worker)
-department_name_column = NameColumn.new(department)
-person_gender_column = GenderColumn.new(person)
+class Vehicle < Bones::TableDef
+  table_name vehicle
+  column id : Int32
+  column person_id : Int32
+  column name : String
+end
+
+class Department < Bones::TableDef
+  table_name department
+  column id : Int32
+  column person_id : Int32
+  column name : String
+end
+
+person = Person.new
+worker = Worker.new
+position = Position.new
+vehicle = Vehicle.new
+department = Department.new
+
+person_id = person.id
+worker_id = worker.id
+position_id = position.id
+worker_person_id = worker.person_id
+position_person_id = position.person_id 
+vehicle_person_id = vehicle.person_id
+department_person_id = department.person_id
+
+person_age = person.age
+person_name = person.name
+worker_name = worker.name
+department_name = department.name
+person_gender = person.gender
 
 sql = Bones::SQL::SQL.new
-sql.select(person_id_column, person_name_column, worker_name_column, sql.sum(person_age_column))
+sql.select(person_id, person_name, worker_name, sql.sum(person_age))
   .from(person)
-  .inner_join(to_table: worker, on: person_id_column.eq(worker_person_id_column))
-  .inner_join(to_table: position, on: person_id_column.dup.eq(position_person_id_column))
-  .left_join(to_table: vehicle, on: person_id_column.dup.eq(vehicle_person_id_column))
-  .right_join(to_table: department, on: person_id_column.dup.eq(department_person_id_column))
-  .where(worker_name_column.eq("Jhon").and(person_gender_column.eq('M')).or(person_age_column.gt(20)).and(person_id_column.dup.is_not(nil)))
-  .order_by(person_id_column.dup.asc)
-  .group_by(person_id_column, person_name_column, worker_name_column)
-  .having(sql.sum(person_age_column).lt(100).and(sql.count(person_id_column).gt(1)))
+  .inner_join(to_table: worker, on: person_id.dup.eq(worker_person_id))
+  .inner_join(to_table: position, on: person_id.dup.eq(position_person_id))
+  .left_join(to_table: vehicle, on: person_id.dup.eq(vehicle_person_id))
+  .right_join(to_table: department, on: person_id.dup.eq(department_person_id))
+  .where(worker_name.eq("Jhon").and(person_gender.eq('M')).or(person_age.gt(20)).and(person_id.is_not(nil)))
+  .order_by(person_id.asc)
+  .group_by(person_id, person_name, worker_name)
+  .having(sql.sum(person_age).lt(100).and(sql.count(person_id).gt(1)))
   .limit(100)
   .offset(2)
   .to_sql_string
-  .should(
-eq("SELECT person.id, person.name, worker.name, SUM(person.age) " +
-    "FROM person " +
-    "INNER JOIN worker ON person.id = worker.person_id " +
-    "INNER JOIN position ON person.id = position.person_id " +
-    "LEFT JOIN vehicle ON person.id = vehicle.person_id " + 
-    "RIGHT JOIN department ON person.id = department.person_id " + 
-    "WHERE worker.name = 'Jhon' AND person.gender = 'M' OR person.age > 20 " +
-    "AND person.id IS NOT NULL " +
-    "GROUP BY person.id, person.name, worker.name " +
-    "HAVING SUM(person.age) < 100 AND COUNT(person.id) > 1 " +
-    "ORDER BY person.id ASC " +
-    "LIMIT 100 OFFSET 2")
-)
+
+# SELECT person.id, person.name, worker.name, SUM(person.age) FROM person INNER JOIN worker ON person.id = worker.person_id 
+# INNER JOIN position ON person.id = position.person_id
+# LEFT JOIN vehicle ON person.id = vehicle.person_id
+# RIGHT JOIN department ON person.id = department.person_id
+# WHERE worker.name = 'Jhon' AND person.gender = 'M' OR person.age > 20
+# AND person.id IS NOT NULL
+# GROUP BY person.id, person.name, worker.name
+# HAVING SUM(person.age) < 100 AND COUNT(person.id) > 1
+# ORDER BY person.id ASC
+# LIMIT 100 OFFSET 2
+
 ```
 
 ## Contributing
