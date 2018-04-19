@@ -1,8 +1,8 @@
  module Bones
    class OrderByColumn
-     property column : Column
+     property sql : SQL::SQL | Nil
  
-     def initialize(@column = Column.new)
+     def initialize(@sql = nil)
      end
  
      def to_sql_string

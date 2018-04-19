@@ -1,13 +1,13 @@
 module Bones
   module LogicalOperators
     module LogicalOperatorMethods
-      def and(column : Column | AggregateFunctions::AggregateFunction) : Column | AggregateFunctions::AggregateFunction
-        @logical_operators << And.new(column)
+      def and(operator : ComparisonOperators::Operator | AggregateFunctions::AggregateFunction)
+        @logical_operators << And.new(operator)
         self
       end
 
-      def or(column : Column | AggregateFunctions::AggregateFunction) : Column | AggregateFunctions::AggregateFunction
-        @logical_operators << Or.new(column)
+      def or(operator : ComparisonOperators::Operator | AggregateFunctions::AggregateFunction)
+        @logical_operators << Or.new(operator)
         self
       end
     end

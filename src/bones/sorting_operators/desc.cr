@@ -1,3 +1,5 @@
+require "./operator"
+
 module Bones
   module SortingOperators
     class Desc < Operator

@@ -1,12 +1,12 @@
 module Bones
   class Where
-    property column : Column
+    property operator : ComparisonOperators::Operator | Nil
 
-    def initialize(@column = Column.new)
+    def initialize(@operator = nil)
     end
 
     def to_sql_string : String
-      "WHERE #{@column.to_sql_with_op_string}"
+      "WHERE #{@operator.to_sql_with_op_string}"
     end
   end
 end

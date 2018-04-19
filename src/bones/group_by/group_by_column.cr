@@ -1,8 +1,8 @@
  module Bones
    class GroupByColumn
-     property column : Column
+     property column : Column::Definition::Column | Nil
  
-     def initialize(@column = Column.new)
+     def initialize(@column = nil)
      end
  
      def to_sql_string

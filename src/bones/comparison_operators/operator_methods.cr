@@ -1,84 +1,44 @@
 module Bones
   module ComparisonOperators
     module OperatorMethods
-      def eq(column : Column)
-        @operator = Eq.new(self, column)
-        self
+      def eq(left_column : Column::Definition::Column, right_column : Column::Definition::Column)
+        Eq.new(left_column, right_column)
       end
 
-      def eq(value : String | Char | Int32 | Int64 | Float32 | Float64 | Nil)
-        @operator = Eq.new(self, value)
-        self
+      def not_eq(left_column : Column::Definition::Column, right_column : Column::Definition::Column)
+        NotEq.new(left_column, right_column)
       end
 
-      def not_eq(column : Column)
-        @operator = NotEq.new(self, column)
-        self
+      def is(left_column : Column::Definition::Column, right_column : Column::Definition::Column)
+        Is.new(left_column, right_column)
       end
 
-      def not_eq(value : String | Char | Int32 | Int64 | Float32 | Float64 | Nil)
-        @operator = NotEq.new(self, value)
-        self
+      def is_null(column : Column::Definition::Column)
+        Is.new(column, nil)
       end
 
-      def is(column : Column)
-        @operator = Is.new(self, column)
-        self
+      def is_not(left_column : Column::Definition::Column, right_column : Column::Definition::Column)
+        IsNot.new(left_column, right_column)
       end
 
-      def is(value : String | Char | Int32 | Int64 | Float32 | Float64 | Nil)
-        @operator = Is.new(self, value)
-        self
+      def is_not_null(column : Column::Definition::Column)
+        IsNot.new(column, nil)
       end
 
-      def is_not(column : Column)
-        @operator = IsNot.new(self, column)
-        self
+      def gt(left_column : Column::Definition::Column, right_column : Column::Definition::Column)
+        Gt.new(left_column, right_column)
       end
 
-      def is_not(value : String | Char | Int32 | Int64 | Float32 | Float64 | Nil)
-        @operator = IsNot.new(self, value)
-        self
+      def lt(left_column : Column::Definition::Column, right_column : Column::Definition::Column)
+        Lt.new(left_column, right_column)
       end
 
-      def gt(column : Column)
-        @operator = Gt.new(self, column)
-        self
+      def gt_eq(left_column : Column::Definition::Column, right_column : Column::Definition::Column)
+        GtEq.new(left_column, right_column)
       end
 
-      def gt(value : String | Char | Int32 | Int64 | Float32 | Float64 | Nil)
-        @operator = Gt.new(self, value)
-        self
-      end
-
-      def lt(column : Column)
-        @operator = Lt.new(self, column)
-        self
-      end
-
-      def lt(value : String | Char | Int32 | Int64 | Float32 | Float64 | Nil)
-        @operator = Lt.new(self, value)
-        self
-      end
-
-      def gt_eq(column : Column)
-        @operator = GtEq.new(self, column)
-        self
-      end
-
-      def gt_eq(value : String | Char | Int32 | Int64 | Float32 | Float64 | Nil)
-        @operator = GtEq.new(self, value)
-        self
-      end
-
-      def lt_eq(column : Column)
-        @operator = LtEq.new(self, column)
-        self
-      end
-
-      def lt_eq(value : String | Char | Int32 | Int64 | Float32 | Float64 | Nil)
-        @operator = LtEq.new(self, value)
-        self
+      def lt_eq(left_column : Column::Definition::Column, right_column : Column::Definition::Column)
+        LtEq.new(left_column, right_column)
       end
     end
   end

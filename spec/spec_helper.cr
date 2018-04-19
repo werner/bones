@@ -1,2 +1,3 @@
 require "spec"
-require "../src/bones/**"
+require "granite_orm/adapter/pg"
+require "../src/bones"

@@ -2,31 +2,31 @@ module Bones
   module SQL
     class SQL
 
+      include Column::Definition
       include LogicalOperators
       include AggregateFunctions
       include QueryJoins
+      include ComparisonOperators::OperatorMethods
+      include LogicalOperators::LogicalOperatorMethods
+      include SortingOperators::SortingOperatorMethods
 
       property select_fields : Select = Select.new
-      property from_table : TableDef = TableDef.new
+      property from_table : Granite::ORM::Base = Granite::ORM::Base.new
       property where : Where | Nil = nil
       property group_by : GroupBy = GroupBy.new
       property having : Having | Nil = nil
       property order_by : OrderBy = OrderBy.new
       property limit : Limit | Nil = nil
       property offset : Offset | Nil = nil
+      property logical_operators : Array(LogicalOperators::LogicalOperator) = [] of LogicalOperators::LogicalOperator
 
       # Starts the query builder, it's the select clause with a series of columns arguments.
       #
       # ```
-      # class MyColumn < Bones::Column
-      #   column name : String
-      # end
       #
-      # class MyAnotherColumn < Bones::Column
-      #   column name : Int32
-      # end
-      #
-      # class MyTable < Bones::TableDef
+      # class MyTable < Granite::ORM::Base
+      #   field my_column : String
+      #   field my_another_column : String
       # end
       #
       # my_table = MyTable.new
@@ -40,12 +40,12 @@ module Bones
         self
       end
 
-      # From SQL clause, with a TableDef argument.
+      # From SQL clause, with a Granite::ORM::Base argument.
       #
       # ```
       # sql.select(my_column, sql.sum(my_another_column)).from(my_table)
       # ```
-      def from(table : TableDef) : SQL
+      def from(table : Granite::ORM::Base) : SQL
         @from_table = table
         self
       end

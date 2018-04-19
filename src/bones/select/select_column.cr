@@ -1,8 +1,8 @@
  module Bones
    class SelectColumn
-     property column : Column | AggregateFunctions::AggregateFunction
+     property column : Column::Definition::Column | AggregateFunctions::AggregateFunction
  
-     def initialize(@column = Column.new)
+     def initialize(@column = Column)
      end
  
      def to_sql_string

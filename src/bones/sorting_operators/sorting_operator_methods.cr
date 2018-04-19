@@ -1,13 +1,13 @@
 module Bones
   module SortingOperators
     module SortingOperatorMethods
-      def asc : Column
-        @sorting_operator = Asc.new
+      def asc(column : Column::Definition::Column )
+        @sorting_operator = Asc.new(column)
         self
       end
 
-      def desc : Column
-        @sorting_operator = Desc.new
+      def desc(column : Column::Definition::Column )
+        @sorting_operator = Desc.new(column)
         self
       end
     end

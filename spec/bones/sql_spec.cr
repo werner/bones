@@ -1,11 +1,10 @@
 require "../spec_helper"
 
-class Person < Bones::TableDef
-  table_name person
-  column id : Int32
-  column age : Int32
-  column name : String
-  column gender : Char
+class Person < Granite::ORM::Base
+  adapter pg
+  field age : Int32
+  field name : String
+  field gender : Char
 
   has_many :worker
   has_many :position
@@ -13,38 +12,38 @@ class Person < Bones::TableDef
   has_many :department
 end
 
-class Worker < Bones::TableDef
+class Worker < Granite::ORM::Base
+  adapter pg
   table_name worker
-  column id : Int32
-  column person_id : Int32
-  column name : String
+  field person_id : Int32
+  field name : String
 
   belongs_to :person
 end
 
-class Position < Bones::TableDef
+class Position < Granite::ORM::Base
+  adapter pg
   table_name position
-  column id : Int32
-  column person_id : Int32
-  column name : String
+  field person_id : Int32
+  field name : String
 
   belongs_to :person
 end
 
-class Vehicle < Bones::TableDef
+class Vehicle < Granite::ORM::Base
+  adapter pg
   table_name vehicle
-  column id : Int32
-  column person_id : Int32
-  column name : String
+  field person_id : Int32
+  field name : String
 
   belongs_to :person
 end
 
-class Department < Bones::TableDef
+class Department < Granite::ORM::Base
+  adapter pg
   table_name department
-  column id : Int32
-  column person_id : Int32
-  column name : String
+  field person_id : Int32
+  field name : String
 
   belongs_to :person
 end
@@ -75,14 +74,18 @@ describe Bones::SQL do
     # I know this query does not make much sense, but I'm using it as a full example
     sql.select(person_id, person_name, worker_name, sql.sum(person_age))
       .from(person)
-      .inner_join(to_table: worker, on: person_id.dup.eq(worker_person_id))
-      .inner_join(to_table: position, on: person_id.dup.eq(position_person_id))
-      .left_join(to_table: vehicle, on: person_id.dup.eq(vehicle_person_id))
-      .right_join(to_table: department, on: person_id.dup.eq(department_person_id))
-      .where(worker_name.eq("Jhon").and(person_gender.eq('M')).or(person_age.gt(20)).and(person_id.is_not(nil)))
-      .order_by(person_id.asc)
+      .inner_join(to_table: worker, on: sql.eq(person_id, worker_person_id))
+      .inner_join(to_table: position, on: sql.eq(person_id, position_person_id))
+      .left_join(to_table: vehicle, on: sql.eq(person_id, vehicle_person_id))
+      .right_join(to_table: department, on: sql.eq(person_id, department_person_id))
+      .where(sql.eq(worker_name, "Jhon"))
+      .and(sql.eq(person_gender, 'M'))
+      .or(sql.gt(person_age, 20))
+      .and(sql.is_not_null(person_id))
+      .order_by(sql.asc(person_id))
       .group_by(person_id, person_name, worker_name)
-      .having(sql.sum(person_age).lt(100).and(sql.count(person_id).gt(1)))
+      .having(sql.lt(sql.sum(person_age), 100))
+      .and(sql.gt(sql.count(person_id), 1))
       .limit(100)
       .offset(2)
       .to_sql_string
